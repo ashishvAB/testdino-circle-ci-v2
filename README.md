@@ -40,11 +40,13 @@ We welcome [issues](https://github.com/<organization>/<project-name>/issues) to 
 
 ### Development Orbs
 
-Prerequisites:
+A [Development orb](https://circleci.com/docs/orb-concepts/#development-orbs) can be created to help with rapid development or testing. Development orbs are mutable and expire after 90 days. They are versioned as `<orb-name>@dev:<branch-name>` or `<orb-name>@dev:alpha`.
 
-- An initial sevmer deployment must be performed in order for Development orbs to be published and seen in the [Orb Registry](https://circleci.com/developer/orbs).
+To create and publish a Development orb on every commit:
 
-A [Development orb](https://circleci.com/docs/orb-concepts/#development-orbs) can be created to help with rapid development or testing. To create a Development orb, change the `orb-tools/publish` job in `test-deploy.yml` to be the following:
+1. **Update the `orb-tools/publish` job** in `.circleci/test-deploy.yml`:
+   - Change `pub_type: production` to `pub_type: dev`
+   - Change `filters: *release-filters` to `filters: *filters` (to publish on all commits, not just release tags)
 
 ```yaml
 - orb-tools/publish:
@@ -56,9 +58,18 @@ A [Development orb](https://circleci.com/docs/orb-concepts/#development-orbs) ca
       - orb-tools/pack
       - command-test
     context: <publishing-context>
-    filters: *filters
+    filters: *filters  # Changed from *release-filters
 ```
 
-The job output will contain a link to the Development orb Registry page. The parameters `enable_pr_comment` and `github_token` can be set to add the relevant publishing information onto a pull request. Please refer to the [orb-tools/publish](https://circleci.com/developer/orbs/orb/circleci/orb-tools#jobs-publish) documentation for more information and options.
+2. **Also update the `orb-tools/pack` job** to use `filters: *filters` instead of `filters: *release-filters`
+
+After pushing your changes, the CircleCI pipeline will:
+- Publish a dev orb on every commit
+- Output a link to the Development orb Registry page
+- The dev orb can be referenced in other projects as `<namespace>/<orb-name>@dev:<branch-name>`
+
+**Optional:** Set `enable_pr_comment: true` and provide a `github_token` to automatically post the dev orb version as a comment on pull requests. Please refer to the [orb-tools/publish](https://circleci.com/developer/orbs/orb/circleci/orb-tools#jobs-publish) documentation for more information and options.
+
+**Note:** Remember to revert these changes back to `pub_type: production` and `filters: *release-filters` before merging to main if you want to maintain the production release workflow.
 # testdino-circle-ci-orb-v2
 # testdino-circle-ci-v2
