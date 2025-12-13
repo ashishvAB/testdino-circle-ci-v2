@@ -40,25 +40,58 @@ We welcome [issues](https://github.com/<organization>/<project-name>/issues) to 
 
 ### Development Orbs
 
-Prerequisites:
+A [Development orb](https://circleci.com/docs/orb-concepts/#development-orbs) can be created to help with rapid development or testing. Development orbs are mutable and expire after 90 days. They are versioned as `<orb-name>@dev:<branch-name>` or `<orb-name>@dev:alpha`.
 
-- An initial sevmer deployment must be performed in order for Development orbs to be published and seen in the [Orb Registry](https://circleci.com/developer/orbs).
+To create and publish a Development orb on every commit with preview links:
 
-A [Development orb](https://circleci.com/docs/orb-concepts/#development-orbs) can be created to help with rapid development or testing. To create a Development orb, change the `orb-tools/publish` job in `test-deploy.yml` to be the following:
+#### 1. Set up GitHub Token (Required for PR Comments)
+
+Add a `GITHUB_TOKEN` environment variable to your CircleCI publishing context:
+- Go to CircleCI → Organization Settings → Contexts → Your Publishing Context
+- Add an environment variable named `GITHUB_TOKEN`
+- For **public repositories**: No special scopes required (use a basic GitHub token)
+- For **private repositories**: Token needs `repo` scope
+
+You can create a GitHub token at: https://github.com/settings/tokens
+
+#### 2. Update the Configuration Files
+
+**a) Update the `orb-tools/publish` job** in `.circleci/test-deploy.yml`:
+   - Change `pub_type: production` to `pub_type: dev`
+   - Change `filters: *release-filters` to `filters: *filters`
+   - Add `add_pr_comment: true` to enable PR comments
+   - Add `github_token: GITHUB_TOKEN` to authenticate with GitHub
 
 ```yaml
 - orb-tools/publish:
     orb_name: <namespace>/<orb-name>
-    vcs_type: << pipeline.project.type >>
+    vcs_type: github
     pub_type: dev
+    # Enable PR comments with preview links
+    add_pr_comment: true
+    github_token: GITHUB_TOKEN
     # Ensure this job requires all test jobs and the pack job.
     requires:
       - orb-tools/pack
       - command-test
     context: <publishing-context>
-    filters: *filters
+    filters: *filters  # Changed from *release-filters
 ```
 
-The job output will contain a link to the Development orb Registry page. The parameters `enable_pr_comment` and `github_token` can be set to add the relevant publishing information onto a pull request. Please refer to the [orb-tools/publish](https://circleci.com/developer/orbs/orb/circleci/orb-tools#jobs-publish) documentation for more information and options.
+**b) Update the `orb-tools/pack` job** to use `filters: *filters` instead of `filters: *release-filters`
+
+#### 3. What You'll Get
+
+After pushing your changes to a pull request, the CircleCI pipeline will:
+- ✅ Publish a dev orb on every commit
+- ✅ **Automatically comment on the PR** with a preview link to the dev orb in the CircleCI Orb Registry
+- ✅ Include the dev orb version (e.g., `<namespace>/<orb-name>@dev:<branch-name>`)
+- ✅ Provide a direct link to test the orb in other projects
+
+The dev orb can be referenced in other projects as `<namespace>/<orb-name>@dev:<branch-name>`
+
+#### Reverting to Production
+
+**Note:** Remember to revert these changes back to `pub_type: production` and `filters: *release-filters` before merging to main if you want to maintain the production release workflow.
 # testdino-circle-ci-orb-v2
 # testdino-circle-ci-v2
