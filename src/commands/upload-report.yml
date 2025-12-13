@@ -1,0 +1,176 @@
+description: >
+  Upload Playwright test reports to TestDino platform.
+  This command uses the TestDino CLI to upload test execution reports with configurable attachment options.
+
+parameters:
+  report-directory:
+    type: string
+    default: "./playwright-report"
+    description: "Directory containing Playwright test reports"
+
+  token:
+    type: string
+    default: TESTDINO_TOKEN
+    description: "TestDino API token (can be the actual token string or environment variable name)"
+
+  upload-images:
+    type: boolean
+    default: false
+    description: "Upload image attachments (JSON + images)"
+
+  upload-videos:
+    type: boolean
+    default: false
+    description: "Upload video attachments (JSON + videos)"
+
+  upload-html:
+    type: boolean
+    default: false
+    description: "Upload HTML reports (JSON + HTML + images + videos - complete bundle)"
+
+  upload-traces:
+    type: boolean
+    default: false
+    description: "Upload trace files (JSON + traces)"
+
+  upload-files:
+    type: boolean
+    default: false
+    description: "Upload file attachments like .md, .pdf, .txt, .log (JSON + files)"
+
+  upload-full-json:
+    type: boolean
+    default: false
+    description: "Upload all attachments (JSON + images + videos + files - complete bundle)"
+
+  json-report:
+    type: string
+    default: ""
+    description: "Optional: Specific JSON report path"
+
+  html-report:
+    type: string
+    default: ""
+    description: "Optional: Specific HTML report path"
+
+  trace-dir:
+    type: string
+    default: ""
+    description: "Optional: Specific trace directory path"
+
+  verbose:
+    type: boolean
+    default: false
+    description: "Enable verbose logging"
+
+steps:
+  - run:
+      name: Install TestDino CLI
+      command: |
+        if ! command -v npx &> /dev/null; then
+          echo "npx not found. Please ensure Node.js is installed."
+          exit 1
+        fi
+        echo "TestDino CLI will be installed via npx when running the upload command"
+
+  - run:
+      name: Upload Playwright Reports to TestDino
+      command: |
+        # Determine if token is an environment variable or direct value
+        TOKEN_VALUE="<< parameters.token >>"
+
+        # Check if it looks like an environment variable name (all caps, underscores, no special chars)
+        # and if that environment variable exists
+        if [[ "$TOKEN_VALUE" =~ ^[A-Z_][A-Z0-9_]*$ ]] && [ -n "${!TOKEN_VALUE}" ]; then
+          # It's an env var name and the env var exists, use its value
+          ACTUAL_TOKEN="${!TOKEN_VALUE}"
+          echo "Using token from environment variable: $TOKEN_VALUE"
+        else
+          # It's either a direct token value or an env var that doesn't exist
+          # Try to use it as a direct value first
+          if [ -n "$TOKEN_VALUE" ]; then
+            ACTUAL_TOKEN="$TOKEN_VALUE"
+            echo "Using token provided as direct value"
+          else
+            echo "Error: TestDino token not provided. Please pass the token directly or set the environment variable."
+            exit 1
+          fi
+        fi
+
+        if [ -z "$ACTUAL_TOKEN" ]; then
+          echo "Error: TestDino token is empty."
+          exit 1
+        fi
+
+        if [ ! -d "<< parameters.report-directory >>" ]; then
+          echo "Error: Report directory << parameters.report-directory >> does not exist."
+          exit 1
+        fi
+
+        echo "Uploading reports from << parameters.report-directory >> to TestDino..."
+
+        # Build the upload command
+        UPLOAD_CMD="npx tdpw upload << parameters.report-directory >> --token=\"$ACTUAL_TOKEN\""
+
+        # Add optional flags
+        <<# parameters.upload-images >>
+        UPLOAD_CMD="$UPLOAD_CMD --upload-images"
+        echo "Flag: --upload-images enabled"
+        <</ parameters.upload-images >>
+
+        <<# parameters.upload-videos >>
+        UPLOAD_CMD="$UPLOAD_CMD --upload-videos"
+        echo "Flag: --upload-videos enabled"
+        <</ parameters.upload-videos >>
+
+        <<# parameters.upload-html >>
+        UPLOAD_CMD="$UPLOAD_CMD --upload-html"
+        echo "Flag: --upload-html enabled (complete HTML bundle)"
+        <</ parameters.upload-html >>
+
+        <<# parameters.upload-traces >>
+        UPLOAD_CMD="$UPLOAD_CMD --upload-traces"
+        echo "Flag: --upload-traces enabled"
+        <</ parameters.upload-traces >>
+
+        <<# parameters.upload-files >>
+        UPLOAD_CMD="$UPLOAD_CMD --upload-files"
+        echo "Flag: --upload-files enabled"
+        <</ parameters.upload-files >>
+
+        <<# parameters.upload-full-json >>
+        UPLOAD_CMD="$UPLOAD_CMD --upload-full-json"
+        echo "Flag: --upload-full-json enabled (complete bundle)"
+        <</ parameters.upload-full-json >>
+
+        <<# parameters.verbose >>
+        UPLOAD_CMD="$UPLOAD_CMD --verbose"
+        echo "Flag: --verbose enabled"
+        <</ parameters.verbose >>
+
+        # Add optional path parameters
+        if [ -n "<< parameters.json-report >>" ]; then
+          UPLOAD_CMD="$UPLOAD_CMD --json-report=\"<< parameters.json-report >>\""
+          echo "Using custom JSON report path: << parameters.json-report >>"
+        fi
+
+        if [ -n "<< parameters.html-report >>" ]; then
+          UPLOAD_CMD="$UPLOAD_CMD --html-report=\"<< parameters.html-report >>\""
+          echo "Using custom HTML report path: << parameters.html-report >>"
+        fi
+
+        if [ -n "<< parameters.trace-dir >>" ]; then
+          UPLOAD_CMD="$UPLOAD_CMD --trace-dir=\"<< parameters.trace-dir >>\""
+          echo "Using custom trace directory: << parameters.trace-dir >>"
+        fi
+
+        # Execute the upload command
+        echo "Executing: $UPLOAD_CMD"
+        eval $UPLOAD_CMD
+
+        if [ $? -eq 0 ]; then
+          echo "Successfully uploaded reports to TestDino!"
+        else
+          echo "Failed to upload reports to TestDino."
+          exit 1
+        fi

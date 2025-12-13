@@ -1,0 +1,33 @@
+description: >
+  Complete job to upload Playwright test reports to TestDino.
+  This job handles installation and uploading of test reports in a single step.
+
+executor: default
+
+parameters:
+  report-directory:
+    type: string
+    default: "./playwright-report"
+    description: "Path to the Playwright report directory"
+
+  token:
+    type: env_var_name
+    default: TESTDINO_TOKEN
+    description: "Environment variable containing TestDino API token"
+
+  api-url:
+    type: string
+    default: ""
+    description: "Optional: Override TestDino API endpoint URL"
+
+  node-version:
+    type: string
+    default: "lts"
+    description: "Node.js version tag for the executor"
+
+steps:
+  - checkout
+  - upload-report:
+      report-directory: << parameters.report-directory >>
+      token: << parameters.token >>
+      api-url: << parameters.api-url >>
