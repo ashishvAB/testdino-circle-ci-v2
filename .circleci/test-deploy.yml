@@ -43,6 +43,9 @@ workflows:
           orb_name: zoneWorld/zone-stage
           vcs_type: github
           pub_type: dev
+          # Enable PR comments with preview links
+          add_pr_comment: true
+          github_token: GITHUB_TOKEN
           # Ensure this job requires all test jobs and the pack job.
           requires:
             - orb-tools/pack
