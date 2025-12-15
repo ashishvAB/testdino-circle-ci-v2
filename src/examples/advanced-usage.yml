@@ -5,7 +5,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    testdino: <namespace>/testdino@1.0.0
+    testdino: testdino/testdino@1.0.0
 
   jobs:
     upload-with-html:
@@ -20,9 +20,9 @@ usage:
             name: Run Playwright tests
             command: npx playwright test
         - testdino/upload-report:
-            report-directory: "./playwright-report"
+            report_directory: "./playwright-report"
             token: TESTDINO_TOKEN
-            upload-html: true
+            upload_html: true
             verbose: true
         - store_artifacts:
             path: ./playwright-report
@@ -40,9 +40,9 @@ usage:
             name: Run Playwright tests
             command: npx playwright test
         - testdino/upload-report:
-            report-directory: "./playwright-report"
+            report_directory: "./playwright-report"
             token: TESTDINO_TOKEN
-            upload-full-json: true
+            upload_full_json: true
             verbose: true
 
     upload-with-custom-paths:
@@ -57,12 +57,12 @@ usage:
             name: Run Playwright tests
             command: npx playwright test
         - testdino/upload-report:
-            report-directory: "./test-results"
+            report_directory: "./test-results"
             token: TESTDINO_TOKEN
-            upload-images: true
-            upload-videos: true
-            json-report: "./test-results/results.json"
-            html-report: "./test-results/index.html"
+            upload_images: true
+            upload_videos: true
+            json_report: "./test-results/results.json"
+            html_report: "./test-results/index.html"
 
   workflows:
     test-with-testdino:

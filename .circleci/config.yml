@@ -1,4 +1,4 @@
-version: 2.2
+version: 2.1
 setup: true
 orbs:
   orb-tools: circleci/orb-tools@12.3
@@ -16,7 +16,7 @@ workflows:
       - orb-tools/pack:
           filters: *filters
       - orb-tools/review:
-          orb_name: zone-stage
+          orb_name: testdino
           filters: *filters
       - shellcheck/check:
           filters: *filters
@@ -24,6 +24,6 @@ workflows:
       - orb-tools/continue:
           pipeline_number: << pipeline.number >>
           vcs_type: github
-          orb_name: zone-stage
+          orb_name: testdino
           requires: [orb-tools/lint, orb-tools/pack, orb-tools/review, shellcheck/check]
           filters: *filters

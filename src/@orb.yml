@@ -7,4 +7,4 @@ description: |
 
 display:
   home_url: "https://testdino.com"
-  source_url: "https://github.com/ashishvAB/testdino-circle-ci-orb-v1.git"
+  source_url: "https://github.com/testdino-inc/testdino-circleci"

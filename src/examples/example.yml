@@ -20,7 +20,7 @@ usage:
             name: Run Playwright tests
             command: npx playwright test
         - testdino/upload-report:
-            report-directory: "./playwright-report"
+            report_directory: "./playwright-report"
             token: TESTDINO_TOKEN
 
   workflows:

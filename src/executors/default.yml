@@ -1,5 +1,5 @@
 description: >
-  Default executor for TestDino orb using Node.js Docker image.
+  Default executor for testdino orb using Node.js Docker image.
   This executor provides a Node.js environment required for running the TestDino CLI (tdpw).
 
 docker:

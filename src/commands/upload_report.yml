@@ -1,0 +1,86 @@
+description: >
+  Upload Playwright test reports to TestDino platform.
+  This command uses the TestDino CLI to upload test execution reports with configurable attachment options.
+
+parameters:
+  report_directory:
+    type: string
+    default: "./playwright-report"
+    description: "Directory containing Playwright test reports"
+
+  token:
+    type: string
+    default: TESTDINO_TOKEN
+    description: "TestDino API token (can be the actual token string or environment variable name)"
+
+  upload_images:
+    type: boolean
+    default: false
+    description: "Upload image attachments (JSON + images)"
+
+  upload_videos:
+    type: boolean
+    default: false
+    description: "Upload video attachments (JSON + videos)"
+
+  upload_html:
+    type: boolean
+    default: false
+    description: "Upload HTML reports (JSON + HTML + images + videos - complete bundle)"
+
+  upload_traces:
+    type: boolean
+    default: false
+    description: "Upload trace files (JSON + traces)"
+
+  upload_files:
+    type: boolean
+    default: false
+    description: "Upload file attachments like .md, .pdf, .txt, .log (JSON + files)"
+
+  upload_full_json:
+    type: boolean
+    default: false
+    description: "Upload all attachments (JSON + images + videos + files - complete bundle)"
+
+  json_report:
+    type: string
+    default: ""
+    description: "Optional: Specific JSON report path"
+
+  html_report:
+    type: string
+    default: ""
+    description: "Optional: Specific HTML report path"
+
+  trace_dir:
+    type: string
+    default: ""
+    description: "Optional: Specific trace directory path"
+
+  verbose:
+    type: boolean
+    default: false
+    description: "Enable verbose logging"
+
+steps:
+  - run:
+      name: Install TestDino CLI
+      command: <<include(scripts/install-cli.sh)>>
+
+  - run:
+      name: Upload Playwright Reports to TestDino
+      environment:
+        PARAM_REPORT_DIRECTORY: << parameters.report_directory >>
+        PARAM_TOKEN: << parameters.token >>
+        PARAM_UPLOAD_IMAGES: << parameters.upload_images >>
+        PARAM_UPLOAD_VIDEOS: << parameters.upload_videos >>
+        PARAM_UPLOAD_HTML: << parameters.upload_html >>
+        PARAM_UPLOAD_TRACES: << parameters.upload_traces >>
+        PARAM_UPLOAD_FILES: << parameters.upload_files >>
+        PARAM_UPLOAD_FULL_JSON: << parameters.upload_full_json >>
+        PARAM_JSON_REPORT: << parameters.json_report >>
+        PARAM_HTML_REPORT: << parameters.html_report >>
+        PARAM_TRACE_DIR: << parameters.trace_dir >>
+        PARAM_VERBOSE: << parameters.verbose >>
+      command: <<include(scripts/upload-report.sh)>>

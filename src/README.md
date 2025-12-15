@@ -22,33 +22,33 @@ Upload Playwright test reports to TestDino platform with configurable attachment
 - `token` (env_var_name, default: TESTDINO_TOKEN) - Environment variable containing TestDino API token
 
 **Optional:**
-- `report-directory` (string, default: "./playwright-report") - Directory containing Playwright test reports
-- `api-url` (string) - Override TestDino API endpoint URL
+- `report_directory` (string, default: "./playwright-report") - Directory containing Playwright test reports
+- `api_url` (string) - Override TestDino API endpoint URL
 
 **Attachment Options (boolean flags):**
-- `upload-images` (boolean, default: false) - Upload image attachments (JSON + images)
-- `upload-videos` (boolean, default: false) - Upload video attachments (JSON + videos)
-- `upload-html` (boolean, default: false) - Upload HTML reports (JSON + HTML + images + videos - complete bundle)
-- `upload-traces` (boolean, default: false) - Upload trace files (JSON + traces)
-- `upload-files` (boolean, default: false) - Upload file attachments like .md, .pdf, .txt, .log (JSON + files)
-- `upload-full-json` (boolean, default: false) - Upload all attachments (JSON + images + videos + files - complete bundle)
+- `upload_images` (boolean, default: false) - Upload image attachments (JSON + images)
+- `upload_videos` (boolean, default: false) - Upload video attachments (JSON + videos)
+- `upload_html` (boolean, default: false) - Upload HTML reports (JSON + HTML + images + videos - complete bundle)
+- `upload_traces` (boolean, default: false) - Upload trace files (JSON + traces)
+- `upload_files` (boolean, default: false) - Upload file attachments like .md, .pdf, .txt, .log (JSON + files)
+- `upload_full_json` (boolean, default: false) - Upload all attachments (JSON + images + videos + files - complete bundle)
 
 **Custom Paths:**
-- `json-report` (string) - Specific JSON report path
-- `html-report` (string) - Specific HTML report path
-- `trace-dir` (string) - Specific trace directory path
+- `json_report` (string) - Specific JSON report path
+- `html_report` (string) - Specific HTML report path
+- `trace_dir` (string) - Specific trace directory path
 
 **Other:**
 - `verbose` (boolean, default: false) - Enable verbose logging
 
 **Flag Combinations:**
 - No flags: Only JSON report uploaded
-- `upload-images`: JSON + image attachments
-- `upload-videos`: JSON + video attachments
-- `upload-files`: JSON + file attachments (.md, .pdf, .txt, .log)
-- `upload-traces`: JSON + trace files
-- `upload-html`: JSON + HTML + images + videos (complete HTML bundle)
-- `upload-full-json`: JSON + images + videos + files (complete bundle)
+- `upload_images`: JSON + image attachments
+- `upload_videos`: JSON + video attachments
+- `upload_files`: JSON + file attachments (.md, .pdf, .txt, .log)
+- `upload_traces`: JSON + trace files
+- `upload_html`: JSON + HTML + images + videos (complete HTML bundle)
+- `upload_full_json`: JSON + images + videos + files (complete bundle)
 
 **Examples:**
 
@@ -61,9 +61,9 @@ Basic upload (JSON only):
 Upload with HTML bundle:
 ```yaml
 - testdino/upload-report:
-    report-directory: "./playwright-report"
+    report_directory: "./playwright-report"
     token: TESTDINO_TOKEN
-    upload-html: true
+    upload_html: true
     verbose: true
 ```
 
@@ -71,28 +71,28 @@ Upload complete bundle:
 ```yaml
 - testdino/upload-report:
     token: TESTDINO_TOKEN
-    upload-full-json: true
+    upload_full_json: true
 ```
 
 Upload with custom paths:
 ```yaml
 - testdino/upload-report:
-    report-directory: "./test-results"
+    report_directory: "./test-results"
     token: TESTDINO_TOKEN
-    upload-images: true
-    upload-videos: true
-    json-report: "./test-results/results.json"
-    html-report: "./test-results/index.html"
+    upload_images: true
+    upload_videos: true
+    json_report: "./test-results/results.json"
+    html_report: "./test-results/index.html"
 ```
 
 ## Jobs
 
-### `upload-playwright-reports`
+### `upload-reports`
 Complete job to upload Playwright test reports to TestDino. This job includes checkout and uses the default Node.js executor.
 
 **Parameters:**
 All parameters from the `upload-report` command are supported, plus:
-- `node-version` (string, default: "lts") - Node.js version tag for the executor
+- `node_version` (string, default: "lts") - Node.js version tag for the executor
 
 ## Usage Examples
 
@@ -101,7 +101,7 @@ All parameters from the `upload-report` command are supported, plus:
 version: 2.1
 
 orbs:
-  testdino: <namespace>/testdino@1.0.0
+  testdino: testdino/testdino@1.0.0
 
 jobs:
   test:
@@ -125,7 +125,7 @@ workflows:
 version: 2.1
 
 orbs:
-  testdino: <namespace>/testdino@1.0.0
+  testdino: testdino/testdino@1.0.0
 
 jobs:
   test:
@@ -136,9 +136,9 @@ jobs:
       - run: npm ci
       - run: npx playwright test
       - testdino/upload-report:
-          report-directory: "./playwright-report"
+          report_directory: "./playwright-report"
           token: TESTDINO_TOKEN
-          upload-html: true
+          upload_html: true
           verbose: true
 
 workflows:
@@ -153,7 +153,7 @@ workflows:
 version: 2.1
 
 orbs:
-  testdino: <namespace>/testdino@1.0.0
+  testdino: testdino/testdino@1.0.0
 
 jobs:
   test:
@@ -165,7 +165,7 @@ jobs:
       - run: npx playwright test
       - testdino/upload-report:
           token: TESTDINO_TOKEN
-          upload-full-json: true
+          upload_full_json: true
           verbose: true
       - store_artifacts:
           path: ./playwright-report
@@ -183,7 +183,7 @@ workflows:
 version: 2.1
 
 orbs:
-  testdino: <namespace>/testdino@1.0.0
+  testdino: testdino/testdino@1.0.0
 
 jobs:
   test:
@@ -194,12 +194,12 @@ jobs:
       - run: npm ci
       - run: npx playwright test
       - testdino/upload-report:
-          report-directory: "./test-results"
+          report_directory: "./test-results"
           token: TESTDINO_TOKEN
-          upload-images: true
-          upload-videos: true
-          upload-traces: true
-          json-report: "./test-results/results.json"
+          upload_images: true
+          upload_videos: true
+          upload_traces: true
+          json_report: "./test-results/results.json"
           verbose: true
 
 workflows:
