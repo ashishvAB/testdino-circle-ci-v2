@@ -1,3 +1,4 @@
+---
 description: >
   Advanced example demonstrating various upload options with the TestDino orb.
   Shows different flag combinations for uploading attachments.
@@ -5,7 +6,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    testdino: testdino/testdino@1.0.0
+    testdino: zonedino/testdino@1.0.0
 
   jobs:
     upload-with-html:

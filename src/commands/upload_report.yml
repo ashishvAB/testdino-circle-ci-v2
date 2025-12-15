@@ -1,6 +1,8 @@
+---
 description: >
   Upload Playwright test reports to TestDino platform.
-  This command uses the TestDino CLI to upload test execution reports with configurable attachment options.
+  This command uses the TestDino CLI to upload test execution reports
+  with configurable attachment options.
 
 parameters:
   report_directory:
@@ -11,7 +13,9 @@ parameters:
   token:
     type: string
     default: TESTDINO_TOKEN
-    description: "TestDino API token (can be the actual token string or environment variable name)"
+    description: >
+      TestDino API token (can be the actual token string or
+      environment variable name)
 
   upload_images:
     type: boolean
@@ -26,7 +30,9 @@ parameters:
   upload_html:
     type: boolean
     default: false
-    description: "Upload HTML reports (JSON + HTML + images + videos - complete bundle)"
+    description: >
+      Upload HTML reports
+      (JSON + HTML + images + videos - complete bundle)
 
   upload_traces:
     type: boolean
@@ -36,12 +42,15 @@ parameters:
   upload_files:
     type: boolean
     default: false
-    description: "Upload file attachments like .md, .pdf, .txt, .log (JSON + files)"
+    description: >
+      Upload file attachments like .md, .pdf, .txt, .log (JSON + files)
 
   upload_full_json:
     type: boolean
     default: false
-    description: "Upload all attachments (JSON + images + videos + files - complete bundle)"
+    description: >
+      Upload all attachments
+      (JSON + images + videos + files - complete bundle)
 
   json_report:
     type: string

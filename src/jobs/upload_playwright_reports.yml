@@ -1,3 +1,4 @@
+---
 description: >
   Complete job to upload Playwright test reports to TestDino.
   This job handles installation and uploading of test reports in a single step.

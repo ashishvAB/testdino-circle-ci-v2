@@ -40,7 +40,7 @@ workflows:
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
-          orb_name: testdino/testdino
+          orb_name: zonedino/testdino
           vcs_type: github
           pub_type: production
           # Ensure this job requires all test jobs and the pack job.

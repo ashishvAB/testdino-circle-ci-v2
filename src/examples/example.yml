@@ -1,3 +1,4 @@
+---
 description: >
   Basic example of using TestDino orb to upload Playwright test reports.
   This example shows the simplest integration - uploading just the JSON report.
@@ -5,7 +6,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    testdino: <namespace>/testdino@1.0.0
+    testdino: zonedino/testdino@1.0.0
 
   jobs:
     run-tests:
