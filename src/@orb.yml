@@ -8,5 +8,5 @@ description: |
   For more information, visit https://docs.testdino.com
 
 display:
-  home_url: "https://testdino.com"
-  source_url: "https://github.com/testdino-inc/testdino-circleci"
+  home_url: "https://testdino.com/"
+  source_url: "https://github.com/testdino-inc/testdino-circleci/"
